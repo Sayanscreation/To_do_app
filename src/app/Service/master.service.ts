@@ -9,7 +9,9 @@ import { ApiResponseModel, Task } from '../model/task';
 })
 export class MasterService {
 
-  apiUrl: string = 'https://freeapi.gerasim.in/api/JWT/GetAllTaskList';
+  
+
+  apiUrl: string = 'https://freeapi.gerasim.in/api/JWT/';
 
 
   constructor(private http: HttpClient) { }
@@ -20,6 +22,14 @@ export class MasterService {
 
   addNewtask(obj: Task): Observable<ApiResponseModel> {
     return this.http.post<ApiResponseModel>(this.apiUrl + 'CreateNewTask',obj);
+  }
+
+  updateTask(obj: Task): Observable<ApiResponseModel> {
+    return this.http.put<ApiResponseModel>(this.apiUrl + 'UpdateTask',obj);
+  }
+
+  deleteTask(id: number): Observable<ApiResponseModel> {
+    return this.http.delete<ApiResponseModel>(this.apiUrl + 'DeleteTask?id'+ id);
   }
 }
  
