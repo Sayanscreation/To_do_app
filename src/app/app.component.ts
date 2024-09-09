@@ -1,3 +1,4 @@
+
 import { HttpClient } from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
@@ -20,7 +21,7 @@ export class AppComponent implements OnInit {
 
   http=inject(HttpClient);
 
-taskObj: Task = new Task();
+  taskObj: Task = new Task();
   taskList: ITask[] = [];
 
   masterService = inject(MasterService);
@@ -34,9 +35,19 @@ taskObj: Task = new Task();
   loadAllTask() {
     this.masterService.getAllTaskList().subscribe((res: ApiResponseModel) => {
       this.taskList = res.data;
-
-    })
+      const itemIds = this.taskList.map(task => task.itemId);
+      const hasDuplicates = new Set(itemIds).size !== itemIds.length;
+      if (hasDuplicates) {
+        console.error("Duplicate itemIds found:", itemIds);
+      }
+      });
   }
+
+  trackByItemId(index: number, item: ITask): number {
+    return item.itemId; // or whatever unique identifier you have
+  }
+
+
 addTask() {
   this.masterService.addNewtask(this.taskObj).subscribe((res:ApiResponseModel)=>{
 if(res.result) {
@@ -82,20 +93,39 @@ updateTask(){
 
 }
 
-onDelete(id: number){
-  const isConfirm = confirm("Are you sure you want to delete?");
-  if(isConfirm) {
-    this.masterService.deleteTask(id).subscribe((res:ApiResponseModel)=>{
-      if(res.result){
-        alert("Task Delete Success");
-        this.loadAllTask();
-      }
-    },error=>{
-      alert('Api Call Error')
-    })
-  }
-
-
+onRemove(){
+  
 }
+
+onDelete(id: number) {
+  const isConfirm = confirm("Are you sure you want to delete?");
+  if (isConfirm) {
+    console.log(`Deleting task with id: ${id}`); // Debugging log
+    this.masterService.deleteTask(id).subscribe((res: ApiResponseModel) => {
+      if (res.result) {
+        alert("Task Delete Success");
+        this.taskList = this.taskList.filter(task => task.itemId !== id);
+        console.log(`Remaining tasks after deletion:`, this.taskList); // Debugging log
+        this.loadAllTask();
+      } else {
+        console.error("Delete API did not return a successful result.");
+      }
+    }, error => {
+      console.error('API Call Error:', error); // Improved error handling
+      alert('API Call Error');
+    });
+  }
+}
+
+
+
+onComplete() {
+  debugger;
+  const newData = this.taskList;
+}
+
+
+
+
 
 }

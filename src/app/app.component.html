@@ -19,24 +19,32 @@
         height: 100%;
         margin: 0;
         padding: 0;
-        background: url('image3.jpg') ;
+        background: url('image3.jpg');
         background-size: cover;
-        position:relative;
+        position: relative;
+        overflow: hidden !important;
+        /* to remove a white bar coming below of the page*/
     }
 
 
+    .main-heading {
+        background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%) !important;
+    }
 
     /* Centering the main content */
-       .content-container {
-     
-       
+    .content-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 100vh;
         background-color: rgba(228, 219, 219, 0.5);
-/*         padding: 40px;
+        /*   padding: 40px;
         border-radius: 10px;
         width: 90%;
         max-width: 800px; */
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-    } 
+        flex-shrink: 0;
+    }
 
     /* Responsive adjustments */
     @media (max-width: 576px) {
@@ -44,12 +52,56 @@
             padding: 20px;
         }
     }
-</style> 
+
+ 
+
+
+
+
+
+
+    .main_buttons {
+        background-image: linear-gradient(to right, #1A2980 0%, #26D0CE 51%, #1A2980 100%) !important;
+        margin: 10px;
+        padding: 15px 45px;
+        text-align: center;
+        text-transform: uppercase;
+        transition: 0.5s;
+        background-size: 200% auto;
+        color: white;
+        box-shadow: 0 0 20px #eee;
+        border-radius: 10px;
+        display: block;
+        height: 60px;
+    }
+
+    .main_buttons:hover {
+        background-position: right center;
+        /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+    }
+
+
+    .sub_buttons {
+        background-image: linear-gradient(to right, #1A2980 0%, #4940fe 51%, #1A2980 100%);
+        margin-left: 5px;
+        transition: background-position 0.5s, color 0.5s;
+
+    }
+
+    .sub_buttons:hover {
+        background-position: left center;
+        /* change the direction of the change here */
+        color: #fff;
+        text-decoration: none;
+    }
+</style>
 
 <body>
 
     <!-- Background Carousel -->
-   <!--  <div id="backgroundCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
+    <!--  <div id="backgroundCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
                 <img src="image2.jpg" class="d-block w-100" alt="First Slide">
@@ -76,13 +128,36 @@
 
     <!-- ToDo App Content -->
     <div class="container pt-3 content-container">
-        <div class="mt-2 p-1 bg-primary text-white rounded text-center">
+        <div class="mt-2 p-1 bg-primary text-white rounded text-center main-heading">
             <h1>ToDo App</h1>
             <p>Advanced Version With Filter</p>
         </div>
 
         <div class="container pt-3">
-            <div class="row">
+           <div class="row">
+            <div class="col-6 pt-2">
+                <textarea id="" class="form-control" cols="3" rows="3" [(ngModel)]="taskObj.taskName"
+                placeholder="Add a new task"></textarea>
+            </div>
+            <div class="col-3 pt-2">
+                <input type="date" class="form-control" id="" [(ngModel)]="taskObj.dueDate" placeholder="Due Date">
+                <input type="text" class="form-control mt-2" id="" [(ngModel)]="taskObj.tags"
+                        placeholder="Enter Comma Separated Tags">
+            </div>
+            <div class="col-3 pt-2 d-flex align-items-center">
+                @if(taskObj.itemId == 0){
+                    <button class="btn btn-success main_buttons" (click)="addTask()">Add Task</button>
+                    } @else {
+                    <button class="btn btn-success main_buttons" (click)="updateTask()">Update Task</button>
+                    }
+
+            </div>
+
+           </div>
+
+
+
+            <!-- <div class="row">
                 <div class="col-6 pt-2">
                     <input type="text" class="form-control" [(ngModel)]="taskObj.taskName" placeholder="Task Name">
                 </div>
@@ -94,46 +169,48 @@
                         placeholder="Task Description"></textarea>
                 </div>
             </div>
+
+
             <div class="row pt-2">
                 <div class="col-3">
                     <input type="date" class="form-control" id="" [(ngModel)]="taskObj.dueDate" placeholder="Due Date">
                 </div>
-                <div class="col-7">
+                <div class="col-6">
                     <input type="text" class="form-control" id="" [(ngModel)]="taskObj.tags"
                         placeholder="Enter Comma Separated Tags">
                 </div>
-                <div class="col">
+                <div class="col-3 d-flex align-items-center">
                     @if(taskObj.itemId == 0){
-                    <button class="btn btn-success" (click)="addTask()">Add Task</button>
+                    <button class="btn btn-success main_buttons" (click)="addTask()">Add Task</button>
                     } @else {
-                    <button class="btn btn-success" (click)="updateTask()">Update Task</button>
+                    <button class="btn btn-success main_buttons" (click)="updateTask()">Update Task</button>
                     }
+                </div>
+            </div> -->
 
+            <div class="row pt-2">
+                <div class="col-12">
+                    <button class="btn btn-secondary sub_buttons">Show All</button>
+                    <button class="btn btn-secondary sub_buttons">Show Completed</button>
+                    <button class="btn btn-secondary sub_buttons">Show On Hold</button>
+                    <button class="btn btn-secondary sub_buttons">Show In-Progress</button>
                 </div>
             </div>
             <div class="row pt-2">
                 <div class="col-12">
-                    <button class="btn btn-secondary">Show All</button>
-                    <button class="btn btn-secondary">Show Completed</button>
-                    <button class="btn btn-secondary">Show On Hold</button>
-                    <button class="btn btn-secondary">Show In-Progress</button>
-                </div>
-            </div>
-            <div class="row pt-2">
-                <div class="col-12">
-                    <button class="btn btn-primary btn-sm">Tags group</button>
-                    <button class="btn btn-primary btn-sm m-1">Default</button>
-                    <button class="btn btn-primary btn-sm m-1">Holiday</button>
-                    <button class="btn btn-primary btn-sm m-1">Financial</button>
-                    <button class="btn btn-primary btn-sm m-1">Fun</button>
-                    <button class="btn btn-primary btn-sm m-1">Emergency</button>
-                    <button class="btn btn-primary btn-sm m-1">Work</button>
-                    <button class="btn btn-primary btn-sm m-1">Education</button>
-                    <button class="btn btn-primary btn-sm m-1">Social</button>
-                    <button class="btn btn-primary btn-sm m-1">All Tags</button>
-                    <button class="btn btn-primary btn-sm m-1">Health</button>
-                    <button class="btn btn-primary btn-sm m-1">Office</button>
-                    <button class="btn btn-primary btn-sm m-1">Motivation</button>
+                    <button class="btn btn-primary sub_buttons btn-sm">Tags group</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Default</button>
+                    <button class="btn btn-primary sub_buttons  btn-sm m-1">Holiday</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Financial</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Fun</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Emergency</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Work</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Education</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Social</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">All Tags</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Health</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Office</button>
+                    <button class="btn btn-primary sub_buttons btn-sm m-1">Motivation</button>
                 </div>
             </div>
             <div class="col-12">
@@ -153,13 +230,14 @@
                             <td>
                                 <div class="row">
                                     <div class="col-1">
-                                        <input type="checkbox">
+                                        <input  [(ngModel)]="item.isCompleted"
+                                            type="checkbox">
                                     </div>
                                     <div class="col-6">
                                         {{item.taskName}}
                                     </div>
                                     <div class="col-4 text-end">
-                                        <i class="fa fa-close text-secondary px-3 text-danger"></i>
+                                        <i class="fa fa-close text-secondary px-3 text-danger" (change)="onDelete(item.itemId)"></i>
                                     </div>
                                 </div>
                             </td>
