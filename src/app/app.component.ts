@@ -1,18 +1,19 @@
 
-import { HttpClient } from '@angular/common/http';
+import { HttpClient} from '@angular/common/http';
 import { Component, inject, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MasterService } from './Service/master.service';
 import { ApiResponseModel, ITask, Task } from './model/task';
 import { DatePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,DatePipe,FormsModule],
+  imports: [RouterOutlet,DatePipe,FormsModule,CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -23,7 +24,8 @@ export class AppComponent implements OnInit {
 
   taskObj: Task = new Task();
   taskList: ITask[] = [];
-
+  tagsList: string [] = ['Work','Health','Market','Meeting','Calls','Defect','Story','Interview'];
+  filterType: string = '';
   masterService = inject(MasterService);
 
   ngOnInit(): void {
@@ -41,6 +43,8 @@ export class AppComponent implements OnInit {
         console.error("Duplicate itemIds found:", itemIds);
       }
       });
+
+
   }
 
   trackByItemId(index: number, item: ITask): number {
@@ -97,13 +101,51 @@ onRemove(){
   
 }
 
+setFilter(type: string) {
+  this.filterType = type;
+  
+}
+
+getArrayFromCommaSeperatedString(value: string) : string[]{
+
+  const arr = value.split(',')
+  return arr
+
+}
+
 onDelete(id: number) {
+  debugger;
   const isConfirm = confirm("Are you sure you want to delete?");
   if (isConfirm) {
-    console.log(`Deleting task with id: ${id}`); // Debugging log
-    this.masterService.deleteTask(id).subscribe((res: ApiResponseModel) => {
+    console.log(`Deleting task with id: ${id}`);
+    this.masterService.deleteTask(id).subscribe(
+      (res: ApiResponseModel) => {
+        console.log('API Response:', res);
+        if (res.result) {
+          alert('Task Delete Success');
+          this.taskList = this.taskList.filter(task => task.itemId !== id);
+          console.log('Remaining tasks after deletion:', this.taskList);
+          this.loadAllTask(); // Reload tasks if necessary
+        } else {
+          console.error('Delete API did not return a successful result.');
+        }
+      },
+      error => {
+        console.error('API Call Error:', error);
+        alert('API Call Error');
+      }
+    );
+    
+    
+    
+    
+    // Debugging log
+/*     this.masterService.deleteTask(id).subscribe((res: ApiResponseModel) => {
       if (res.result) {
         alert("Task Delete Success");
+        console.log(`Attempting to delete task with id: ${id}`);
+
+
         this.taskList = this.taskList.filter(task => task.itemId !== id);
         console.log(`Remaining tasks after deletion:`, this.taskList); // Debugging log
         this.loadAllTask();
@@ -113,7 +155,7 @@ onDelete(id: number) {
     }, error => {
       console.error('API Call Error:', error); // Improved error handling
       alert('API Call Error');
-    });
+    });  */
   }
 }
 

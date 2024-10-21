@@ -53,11 +53,6 @@
         }
     }
 
- 
-
-
-
-
 
 
     .main_buttons {
@@ -190,15 +185,17 @@
 
             <div class="row pt-2">
                 <div class="col-12">
-                    <button class="btn btn-secondary sub_buttons">Show All</button>
-                    <button class="btn btn-secondary sub_buttons">Show Completed</button>
-                    <button class="btn btn-secondary sub_buttons">Show On Hold</button>
-                    <button class="btn btn-secondary sub_buttons">Show In-Progress</button>
+                    <button class="btn btn-secondary sub_buttons" (click)="setFilter('showAll')">Show All</button>
+                    <button class="btn btn-secondary sub_buttons" (click)="setFilter('showCompleted')">Show Completed</button>
+                  <!--   <button class="btn btn-secondary sub_buttons" (click)="setFilter('onHold')">Show On Hold</button> -->
+                    <button class="btn btn-secondary sub_buttons" (click)="setFilter('tags')">Filter by Tags</button>
+
                 </div>
             </div>
-            <div class="row pt-2">
+            <div class="row pt-1" *ngIf="filterType == 'tags' ">
                 <div class="col-12">
-                    <button class="btn btn-primary sub_buttons btn-sm">Tags group</button>
+
+                    <button class="btn btn-primary sub_buttons btn-sm" *ngFor="let tag of tagsList">{{tag}}</button>
                     <button class="btn btn-primary sub_buttons btn-sm m-1">Default</button>
                     <button class="btn btn-primary sub_buttons  btn-sm m-1">Holiday</button>
                     <button class="btn btn-primary sub_buttons btn-sm m-1">Financial</button>
@@ -226,25 +223,25 @@
                     <tbody>
                         @for (item of taskList ; track 'itemId') {
                         <tr>
-                            <td style="text-align: center;">{{$index}}</td>
+                            <td style="text-align: center;">{{$index+1}}</td>
                             <td>
                                 <div class="row">
                                     <div class="col-1">
-                                        <input  [(ngModel)]="item.isCompleted"
+                                        <input (change)="onComplete()"  [(ngModel)]="item.isCompleted"
                                             type="checkbox">
                                     </div>
                                     <div class="col-6">
                                         {{item.taskName}}
                                     </div>
                                     <div class="col-4 text-end">
-                                        <i class="fa fa-close text-secondary px-3 text-danger" (change)="onDelete(item.itemId)"></i>
+                                        <i (click)="onDelete(item.itemId)" class="fa fa-close text-secondary px-3 text-danger" ></i>
                                     </div>
                                 </div>
                             </td>
                             <td>
                                 {{item.dueDate | date: 'dd-MM-yy'}}
                             </td>
-                            <td class="text-center">
+                            <!-- <td class="text-center">
                                 <button class="btn btn-warning btn-sm rounded-btn mr-2" (click)="onEdit(item)">
                                     <i class="fa fa-pencil" style="color: azure;"></i>
                                 </button>
@@ -254,7 +251,21 @@
                                 <button class="btn btn-success btn-sm rounded-btn">
                                     <i class="fa fa-save"></i>
                                 </button>
+                            </td> -->
+
+                            <td class="text-center">
+                                <button class="btn btn-warning btn-sm rounded-btn mr-2" (click)="onEdit(item)">
+                                    <i class="fa fa-pencil" style="color: azure;"></i>
+                                </button>
+                           
+                                <button class="btn btn-danger btn-sm rounded-btn mr-2"  >
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <button class="btn btn-success btn-sm rounded-btn">
+                                    <i class="fa fa-save"></i>
+                                </button>
                             </td>
+                            
                         </tr>
                         }
                     </tbody>
